@@ -6,10 +6,10 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/configure"
-	"github.com/gwuhaolin/livego/protocol/rtmp"
-	"github.com/gwuhaolin/livego/protocol/rtmp/rtmprelay"
+	"github.com/bigsillybear/livego/av"
+	"github.com/bigsillybear/livego/configure"
+	"github.com/bigsillybear/livego/protocol/rtmp"
+	"github.com/bigsillybear/livego/protocol/rtmp/rtmprelay"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
@@ -199,7 +199,7 @@ func (server *Server) GetLiveStatics(w http.ResponseWriter, req *http.Request) {
 	res.Data = msgs
 }
 
-//http://127.0.0.1:8090/control/pull?&oper=start&app=live&name=123456&url=rtmp://192.168.16.136/live/123456
+//http://127.0.0.1:8090/control/pull?&oper=start&app=live&channel_key=rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk&url=rtmp://{pull_streaming_server}/live/movie
 func (s *Server) handlePull(w http.ResponseWriter, req *http.Request) {
 	var retString string
 	var err error
@@ -214,26 +214,26 @@ func (s *Server) handlePull(w http.ResponseWriter, req *http.Request) {
 
 	if req.ParseForm() != nil {
 		res.Status = 400
-		res.Data = "url: /control/pull?&oper=start&app=live&name=123456&url=rtmp://192.168.16.136/live/123456"
+		res.Data = "url: /control/pull?&oper=start&app=live&channel_key=rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk&url=rtmp://{pull_streaming_server}/live/movie"
 		return
 	}
 
 	oper := req.Form.Get("oper")
 	app := req.Form.Get("app")
-	name := req.Form.Get("name")
+	channelKey := req.Form.Get("channel_key")
 	url := req.Form.Get("url")
 
-	log.Debugf("control pull: oper=%v, app=%v, name=%v, url=%v", oper, app, name, url)
-	if (len(app) <= 0) || (len(name) <= 0) || (len(url) <= 0) {
+	log.Debugf("control pull: oper=%v, app=%v, channelKey=%v, url=%v", oper, app, channelKey, url)
+	if (len(app) <= 0) || (len(channelKey) <= 0) || (len(url) <= 0) {
 		res.Status = 400
 		res.Data = "control pull parameter error, please check them."
 		return
 	}
 
-	remoteurl := "rtmp://127.0.0.1" + s.rtmpAddr + "/" + app + "/" + name
-	localurl := url
+	publishUrl := "rtmp://127.0.0.1" + s.rtmpAddr + "/" + app + "/" + channelKey
+	playUrl := url
 
-	keyString := "pull:" + app + "/" + name
+	keyString := "pull:" + app + "/" + channelKey
 	if oper == "stop" {
 		pullRtmprelay, found := s.session[keyString]
 
@@ -243,7 +243,7 @@ func (s *Server) handlePull(w http.ResponseWriter, req *http.Request) {
 			res.Data = retString
 			return
 		}
-		log.Debugf("rtmprelay stop pull %s from %s", remoteurl, localurl)
+		log.Debugf("rtmprelay stop pull %s from %s", publishUrl, playUrl)
 		pullRtmprelay.Stop()
 
 		delete(s.session, keyString)
@@ -251,8 +251,8 @@ func (s *Server) handlePull(w http.ResponseWriter, req *http.Request) {
 		res.Data = retString
 		log.Debugf("pull stop return %s", retString)
 	} else {
-		pullRtmprelay := rtmprelay.NewRtmpRelay(&localurl, &remoteurl)
-		log.Debugf("rtmprelay start pull %s from %s", remoteurl, localurl)
+		pullRtmprelay := rtmprelay.NewRtmpRelay(&playUrl, &publishUrl)
+		log.Debugf("rtmprelay start pull %s from %s", publishUrl, playUrl)
 		err = pullRtmprelay.Start()
 		if err != nil {
 			retString = fmt.Sprintf("pull error=%v", err)
@@ -267,7 +267,7 @@ func (s *Server) handlePull(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-//http://127.0.0.1:8090/control/push?&oper=start&app=live&name=123456&url=rtmp://192.168.16.136/live/123456
+//http://127.0.0.1:8090/control/push?&oper=start&app=live&channel_key=rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk&url=rtmp://{push_streaming_server}/live/movie
 func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 	var retString string
 	var err error
@@ -281,26 +281,26 @@ func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 	defer res.SendJson()
 
 	if req.ParseForm() != nil {
-		res.Data = "url: /control/push?&oper=start&app=live&name=123456&url=rtmp://192.168.16.136/live/123456"
+		res.Data = "url: /control/push?&oper=start&app=live&channel_key=rfBd56ti2SMtYvSgD5xAV0YU99zampta7Z7S575KLkIZ9PYk&url=rtmp://{push_streaming_server}/live/movie"
 		return
 	}
 
 	oper := req.Form.Get("oper")
 	app := req.Form.Get("app")
-	name := req.Form.Get("name")
+	channelKey := req.Form.Get("channel_key")
 	url := req.Form.Get("url")
 
-	log.Debugf("control push: oper=%v, app=%v, name=%v, url=%v", oper, app, name, url)
-	if (len(app) <= 0) || (len(name) <= 0) || (len(url) <= 0) {
+	log.Debugf("control push: oper=%v, app=%v, channelKey=%v, url=%v", oper, app, channelKey, url)
+	if (len(app) <= 0) || (len(channelKey) <= 0) || (len(url) <= 0) {
 		res.Status = 400
 		res.Data = "control push parameter error, please check them."
 		return
 	}
 
-	localurl := "rtmp://127.0.0.1" + s.rtmpAddr + "/" + app + "/" + name
-	remoteurl := url
+	playUrl := "rtmp://127.0.0.1" + s.rtmpAddr + "/" + app + "/" + channelKey
+	publishUrl := url
 
-	keyString := "push:" + app + "/" + name
+	keyString := "push:" + app + "/" + channelKey
 	if oper == "stop" {
 		pushRtmprelay, found := s.session[keyString]
 		if !found {
@@ -309,7 +309,7 @@ func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 			res.Data = retString
 			return
 		}
-		log.Debugf("rtmprelay stop push %s from %s", remoteurl, localurl)
+		log.Debugf("rtmprelay stop push %s from %s", publishUrl, playUrl)
 		pushRtmprelay.Stop()
 
 		delete(s.session, keyString)
@@ -317,8 +317,8 @@ func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 		res.Data = retString
 		log.Debugf("push stop return %s", retString)
 	} else {
-		pushRtmprelay := rtmprelay.NewRtmpRelay(&localurl, &remoteurl)
-		log.Debugf("rtmprelay start push %s from %s", remoteurl, localurl)
+		pushRtmprelay := rtmprelay.NewRtmpRelay(&playUrl, &publishUrl)
+		log.Debugf("rtmprelay start push %s from %s", publishUrl, playUrl)
 		err = pushRtmprelay.Start()
 		if err != nil {
 			retString = fmt.Sprintf("push error=%v", err)
@@ -333,7 +333,7 @@ func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-//http://127.0.0.1:8090/control/reset?room=ROOM_NAME
+//http://127.0.0.1:8090/control/reset?room={room}
 func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -344,14 +344,14 @@ func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/reset?room=<ROOM_NAME>"
+		res.Data = "url: /control/reset?room={room}"
 		return
 	}
 	room := r.Form.Get("room")
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/reset?room=<ROOM_NAME>"
+		res.Data = "url: /control/reset?room={room}"
 		return
 	}
 
@@ -365,7 +365,7 @@ func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 	res.Data = msg
 }
 
-//http://127.0.0.1:8090/control/get?room=ROOM_NAME
+//http://127.0.0.1:8090/control/get?room={room}
 func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -376,7 +376,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/get?room=<ROOM_NAME>"
+		res.Data = "url: /control/get?room={room}"
 		return
 	}
 
@@ -384,7 +384,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/get?room=<ROOM_NAME>"
+		res.Data = "url: /control/get?room={room}"
 		return
 	}
 
@@ -396,7 +396,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 	res.Data = msg
 }
 
-//http://127.0.0.1:8090/control/delete?room=ROOM_NAME
+//http://127.0.0.1:8090/control/delete?room={room}
 func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -407,7 +407,7 @@ func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/delete?room=<ROOM_NAME>"
+		res.Data = "url: /control/delete?room={room}"
 		return
 	}
 
@@ -415,7 +415,7 @@ func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/delete?room=<ROOM_NAME>"
+		res.Data = "url: /control/delete?room={room}"
 		return
 	}
 

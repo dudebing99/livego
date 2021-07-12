@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/gwuhaolin/livego/av"
-	"github.com/gwuhaolin/livego/configure"
-	"github.com/gwuhaolin/livego/protocol/rtmp/core"
+	"github.com/bigsillybear/livego/av"
+	"github.com/bigsillybear/livego/configure"
+	"github.com/bigsillybear/livego/protocol/rtmp/core"
 
 	log "github.com/sirupsen/logrus"
 )

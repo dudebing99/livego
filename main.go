@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/gwuhaolin/livego/configure"
-	"github.com/gwuhaolin/livego/protocol/api"
-	"github.com/gwuhaolin/livego/protocol/hls"
-	"github.com/gwuhaolin/livego/protocol/httpflv"
-	"github.com/gwuhaolin/livego/protocol/rtmp"
+	"github.com/bigsillybear/livego/configure"
+	"github.com/bigsillybear/livego/protocol/api"
+	"github.com/bigsillybear/livego/protocol/hls"
+	"github.com/bigsillybear/livego/protocol/httpflv"
+	"github.com/bigsillybear/livego/protocol/rtmp"
 	"net"
 	"path"
 	"runtime"
