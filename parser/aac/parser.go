@@ -105,9 +105,9 @@ func (parser *Parser) SampleRate() int {
 
 func (parser *Parser) Parse(b []byte, packetType uint8, w io.Writer) (err error) {
 	switch packetType {
-	case av.AAC_SEQHDR:
+	case av.AacSeqHdr:
 		err = parser.specificInfo(b)
-	case av.AAC_RAW:
+	case av.AacRaw:
 		err = parser.adts(b, w)
 	}
 	return

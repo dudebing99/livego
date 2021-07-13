@@ -281,12 +281,12 @@ func (connClient *ConnClient) Start(url string, method string) error {
 		return err
 	}
 
-	log.Debug("method control:", method, av.PUBLISH, av.PLAY)
-	if method == av.PUBLISH {
+	log.Debug("method control:", method, av.Publish, av.Play)
+	if method == av.Publish {
 		if err := connClient.writePublishMsg(); err != nil {
 			return err
 		}
-	} else if method == av.PLAY {
+	} else if method == av.Play {
 		if err := connClient.writePlayMsg(); err != nil {
 			return err
 		}
@@ -296,8 +296,8 @@ func (connClient *ConnClient) Start(url string, method string) error {
 }
 
 func (connClient *ConnClient) Write(c ChunkStream) error {
-	if c.TypeID == av.TAG_SCRIPTDATAAMF0 ||
-		c.TypeID == av.TAG_SCRIPTDATAAMF3 {
+	if c.TypeID == av.TagScriptDataAmf0 ||
+		c.TypeID == av.TagScriptDataAmf3 {
 		var err error
 		if c.Data, err = amf.MetaDataReform(c.Data, amf.ADD); err != nil {
 			return err

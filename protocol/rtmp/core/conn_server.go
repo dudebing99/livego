@@ -327,8 +327,8 @@ func (connServer *ConnServer) IsPublisher() bool {
 }
 
 func (connServer *ConnServer) Write(c ChunkStream) error {
-	if c.TypeID == av.TAG_SCRIPTDATAAMF0 ||
-		c.TypeID == av.TAG_SCRIPTDATAAMF3 {
+	if c.TypeID == av.TagScriptDataAmf0 ||
+		c.TypeID == av.TagScriptDataAmf3 {
 		var err error
 		if c.Data, err = amf.MetaDataReform(c.Data, amf.DEL); err != nil {
 			return err

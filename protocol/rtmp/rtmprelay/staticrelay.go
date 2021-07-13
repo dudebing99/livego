@@ -153,12 +153,12 @@ func (self *StaticPush) sendPacket(p *av.Packet) {
 	//log.Printf("Static sendPacket: rtmpurl=%s, length=%d, streamid=%d",
 	//	self.RtmpUrl, len(p.Data), cs.StreamID)
 	if p.IsVideo {
-		cs.TypeID = av.TAG_VIDEO
+		cs.TypeID = av.TagVideo
 	} else {
 		if p.IsMetadata {
-			cs.TypeID = av.TAG_SCRIPTDATAAMF0
+			cs.TypeID = av.TagScriptDataAmf0
 		} else {
-			cs.TypeID = av.TAG_AUDIO
+			cs.TypeID = av.TagAudio
 		}
 	}
 

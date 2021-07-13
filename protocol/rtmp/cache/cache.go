@@ -29,8 +29,8 @@ func (cache *Cache) Write(p av.Packet) {
 		if !p.IsVideo {
 			ah, ok := p.Header.(av.AudioPacketHeader)
 			if ok {
-				if ah.SoundFormat() == av.SOUND_AAC &&
-					ah.AACPacketType() == av.AAC_SEQHDR {
+				if ah.SoundFormat() == av.SoundAac &&
+					ah.AACPacketType() == av.AacSeqHdr {
 					cache.audioSeq.Write(&p)
 					return
 				} else {

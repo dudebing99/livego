@@ -115,12 +115,12 @@ func (tag *Tag) AACPacketType() uint8 {
 }
 
 func (tag *Tag) IsKeyFrame() bool {
-	return tag.mediat.frameType == av.FRAME_KEY
+	return tag.mediat.frameType == av.FrameKey
 }
 
 func (tag *Tag) IsSeq() bool {
-	return tag.mediat.frameType == av.FRAME_KEY &&
-		tag.mediat.avcPacketType == av.AVC_SEQHDR
+	return tag.mediat.frameType == av.FrameKey &&
+		tag.mediat.avcPacketType == av.AvcSeqHdr
 }
 
 func (tag *Tag) CodecID() uint8 {
@@ -154,7 +154,7 @@ func (tag *Tag) parseAudioHeader(b []byte) (n int, err error) {
 	tag.mediat.soundType = flags & 0x1
 	n++
 	switch tag.mediat.soundFormat {
-	case av.SOUND_AAC:
+	case av.SoundAac:
 		tag.mediat.aacPacketType = b[1]
 		n++
 	}
@@ -170,7 +170,7 @@ func (tag *Tag) parseVideoHeader(b []byte) (n int, err error) {
 	tag.mediat.frameType = flags >> 4
 	tag.mediat.codecID = flags & 0xf
 	n++
-	if tag.mediat.frameType == av.FRAME_INTER || tag.mediat.frameType == av.FRAME_KEY {
+	if tag.mediat.frameType == av.FrameInter || tag.mediat.frameType == av.FrameKey {
 		tag.mediat.avcPacketType = b[1]
 		for i := 2; i < 5; i++ {
 			tag.mediat.compositionTime = tag.mediat.compositionTime<<8 + int32(b[i])

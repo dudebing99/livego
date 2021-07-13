@@ -6,56 +6,32 @@ import (
 )
 
 const (
-	TAG_AUDIO          = 8
-	TAG_VIDEO          = 9
-	TAG_SCRIPTDATAAMF0 = 18
-	TAG_SCRIPTDATAAMF3 = 0xf
+	TagAudio          = 0x08
+	TagVideo          = 0x09
+	TagScriptDataAmf0 = 0x12
+	TagScriptDataAmf3 = 0x0f
 )
 
 const (
-	MetadatAMF0  = 0x12
-	MetadataAMF3 = 0xf
+	SoundMp3 = 0x02
+	SoundAac = 0x0a
+
+	AacSeqHdr = 0x00
+	AacRaw    = 0x01
 )
 
 const (
-	SOUND_MP3                   = 2
-	SOUND_NELLYMOSER_16KHZ_MONO = 4
-	SOUND_NELLYMOSER_8KHZ_MONO  = 5
-	SOUND_NELLYMOSER            = 6
-	SOUND_ALAW                  = 7
-	SOUND_MULAW                 = 8
-	SOUND_AAC                   = 10
-	SOUND_SPEEX                 = 11
+	AvcSeqHdr = 0x00
 
-	SOUND_5_5Khz = 0
-	SOUND_11Khz  = 1
-	SOUND_22Khz  = 2
-	SOUND_44Khz  = 3
+	FrameKey   = 0x01
+	FrameInter = 0x02
 
-	SOUND_8BIT  = 0
-	SOUND_16BIT = 1
-
-	SOUND_MONO   = 0
-	SOUND_STEREO = 1
-
-	AAC_SEQHDR = 0
-	AAC_RAW    = 1
+	VideoH264 = 0x07
 )
 
 const (
-	AVC_SEQHDR = 0
-	AVC_NALU   = 1
-	AVC_EOS    = 2
-
-	FRAME_KEY   = 1
-	FRAME_INTER = 2
-
-	VIDEO_H264 = 7
-)
-
-var (
-	PUBLISH = "publish"
-	PLAY    = "play"
+	Publish = "publish"
+	Play    = "play"
 )
 
 // Header can be converted to AudioHeaderInfo or VideoHeaderInfo

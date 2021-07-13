@@ -206,7 +206,7 @@ func (source *Source) cut() {
 	}
 	if newf {
 		source.btswriter.Write(source.muxer.PAT())
-		source.btswriter.Write(source.muxer.PMT(av.SOUND_AAC, true))
+		source.btswriter.Write(source.muxer.PMT(av.SoundAac, true))
 	}
 }
 
@@ -216,7 +216,7 @@ func (source *Source) parse(p *av.Packet) (int32, bool, error) {
 	var vh av.VideoPacketHeader
 	if p.IsVideo {
 		vh = p.Header.(av.VideoPacketHeader)
-		if vh.CodecID() != av.VIDEO_H264 {
+		if vh.CodecID() != av.VideoH264 {
 			return compositionTime, false, ErrNoSupportVideoCodec
 		}
 		compositionTime = vh.CompositionTime()
@@ -225,10 +225,10 @@ func (source *Source) parse(p *av.Packet) (int32, bool, error) {
 		}
 	} else {
 		ah = p.Header.(av.AudioPacketHeader)
-		if ah.SoundFormat() != av.SOUND_AAC {
+		if ah.SoundFormat() != av.SoundAac {
 			return compositionTime, false, ErrNoSupportAudioCodec
 		}
-		if ah.AACPacketType() == av.AAC_SEQHDR {
+		if ah.AACPacketType() == av.AacSeqHdr {
 			return compositionTime, true, source.tsparser.Parse(p, source.bwriter)
 		}
 	}
