@@ -93,14 +93,14 @@ func (self *RtmpRelay) Start() error {
 	self.connectPublishClient = core.NewConnClient()
 
 	log.Debugf("play server addr:%v starting....", self.PlayUrl)
-	err := self.connectPlayClient.Start(self.PlayUrl, av.PLAY)
+	err := self.connectPlayClient.Start(self.PlayUrl, av.Play)
 	if err != nil {
 		log.Debugf("connectPlayClient.Start url=%v error", self.PlayUrl)
 		return err
 	}
 
 	log.Debugf("publish server addr:%v starting....", self.PublishUrl)
-	err = self.connectPublishClient.Start(self.PublishUrl, av.PUBLISH)
+	err = self.connectPublishClient.Start(self.PublishUrl, av.Publish)
 	if err != nil {
 		log.Debugf("connectPublishClient.Start url=%v error", self.PublishUrl)
 		self.connectPlayClient.Close(nil)

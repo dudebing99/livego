@@ -1,6 +1,7 @@
 package av
 
 import (
+	"github.com/sirupsen/logrus"
 	"sync"
 	"time"
 )
@@ -34,22 +35,26 @@ func (rw *RWBaser) CalcBaseTimestamp() {
 }
 
 func (rw *RWBaser) RecTimeStamp(timestamp, typeID uint32) {
-	if typeID == TAG_VIDEO {
+	if typeID == TagVideo {
 		rw.LastVideoTimestamp = timestamp
-	} else if typeID == TAG_AUDIO {
+	} else if typeID == TagAudio {
 		rw.LastAudioTimestamp = timestamp
+	} else {
+		logrus.Warnf("unexpected type id: %d", typeID)
 	}
 }
 
 func (rw *RWBaser) SetPreTime() {
 	rw.lock.Lock()
+	defer rw.lock.Unlock()
+
 	rw.PreTime = time.Now()
-	rw.lock.Unlock()
 }
 
 func (rw *RWBaser) Alive() bool {
 	rw.lock.Lock()
+	defer rw.lock.Unlock()
+
 	b := !(time.Now().Sub(rw.PreTime) >= rw.timeout)
-	rw.lock.Unlock()
 	return b
 }

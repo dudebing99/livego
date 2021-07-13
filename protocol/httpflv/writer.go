@@ -117,17 +117,17 @@ func (flvWriter *FLVWriter) SendPacket() error {
 		if ok {
 			flvWriter.RWBaser.SetPreTime()
 			h := flvWriter.buf[:headerLen]
-			typeID := av.TAG_VIDEO
+			typeID := av.TagVideo
 			if !p.IsVideo {
 				if p.IsMetadata {
 					var err error
-					typeID = av.TAG_SCRIPTDATAAMF0
+					typeID = av.TagScriptDataAmf0
 					p.Data, err = amf.MetaDataReform(p.Data, amf.DEL)
 					if err != nil {
 						return err
 					}
 				} else {
-					typeID = av.TAG_AUDIO
+					typeID = av.TagAudio
 				}
 			}
 			dataLen := len(p.Data)

@@ -45,11 +45,11 @@ func (c *Client) Dial(url string, method string) error {
 	if err := connClient.Start(url, method); err != nil {
 		return err
 	}
-	if method == av.PUBLISH {
+	if method == av.Publish {
 		writer := NewVirWriter(connClient)
 		log.Debugf("client Dial call NewVirWriter url=%s, method=%s", url, method)
 		c.handler.HandleWriter(writer)
-	} else if method == av.PLAY {
+	} else if method == av.Play {
 		reader := NewVirReader(connClient)
 		log.Debugf("client Dial call NewVirReader url=%s, method=%s", url, method)
 		c.handler.HandleReader(reader)
@@ -318,12 +318,12 @@ func (v *VirWriter) SendPacket() error {
 			cs.Timestamp += v.BaseTimeStamp()
 
 			if p.IsVideo {
-				cs.TypeID = av.TAG_VIDEO
+				cs.TypeID = av.TagVideo
 			} else {
 				if p.IsMetadata {
-					cs.TypeID = av.TAG_SCRIPTDATAAMF0
+					cs.TypeID = av.TagScriptDataAmf0
 				} else {
-					cs.TypeID = av.TAG_AUDIO
+					cs.TypeID = av.TagAudio
 				}
 			}
 
@@ -422,17 +422,17 @@ func (v *VirReader) Read(p *av.Packet) (err error) {
 		if err != nil {
 			return err
 		}
-		if cs.TypeID == av.TAG_AUDIO ||
-			cs.TypeID == av.TAG_VIDEO ||
-			cs.TypeID == av.TAG_SCRIPTDATAAMF0 ||
-			cs.TypeID == av.TAG_SCRIPTDATAAMF3 {
+		if cs.TypeID == av.TagAudio ||
+			cs.TypeID == av.TagVideo ||
+			cs.TypeID == av.TagScriptDataAmf0 ||
+			cs.TypeID == av.TagScriptDataAmf3 {
 			break
 		}
 	}
 
-	p.IsAudio = cs.TypeID == av.TAG_AUDIO
-	p.IsVideo = cs.TypeID == av.TAG_VIDEO
-	p.IsMetadata = cs.TypeID == av.TAG_SCRIPTDATAAMF0 || cs.TypeID == av.TAG_SCRIPTDATAAMF3
+	p.IsAudio = cs.TypeID == av.TagAudio
+	p.IsVideo = cs.TypeID == av.TagVideo
+	p.IsMetadata = cs.TypeID == av.TagScriptDataAmf0 || cs.TypeID == av.TagScriptDataAmf3
 	p.StreamID = cs.StreamID
 	p.Data = cs.Data
 	p.TimeStamp = cs.Timestamp

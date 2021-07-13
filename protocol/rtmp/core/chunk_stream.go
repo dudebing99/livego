@@ -81,11 +81,11 @@ END:
 }
 
 func (chunkStream *ChunkStream) writeChunk(w *ReadWriter, chunkSize int) error {
-	if chunkStream.TypeID == av.TAG_AUDIO {
+	if chunkStream.TypeID == av.TagAudio {
 		chunkStream.CSID = 4
-	} else if chunkStream.TypeID == av.TAG_VIDEO ||
-		chunkStream.TypeID == av.TAG_SCRIPTDATAAMF0 ||
-		chunkStream.TypeID == av.TAG_SCRIPTDATAAMF3 {
+	} else if chunkStream.TypeID == av.TagVideo ||
+		chunkStream.TypeID == av.TagScriptDataAmf0 ||
+		chunkStream.TypeID == av.TagScriptDataAmf3 {
 		chunkStream.CSID = 6
 	}
 
