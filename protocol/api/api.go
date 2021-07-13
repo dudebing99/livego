@@ -333,7 +333,7 @@ func (s *Server) handlePush(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-//http://127.0.0.1:8090/control/reset?room=ROOM_NAME
+//http://127.0.0.1:8090/control/reset?room={room}
 func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -344,14 +344,14 @@ func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/reset?room=<ROOM_NAME>"
+		res.Data = "url: /control/reset?room={room}"
 		return
 	}
 	room := r.Form.Get("room")
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/reset?room=<ROOM_NAME>"
+		res.Data = "url: /control/reset?room={room}"
 		return
 	}
 
@@ -365,7 +365,7 @@ func (s *Server) handleReset(w http.ResponseWriter, r *http.Request) {
 	res.Data = msg
 }
 
-//http://127.0.0.1:8090/control/get?room=ROOM_NAME
+//http://127.0.0.1:8090/control/get?room={room}
 func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -376,7 +376,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/get?room=<ROOM_NAME>"
+		res.Data = "url: /control/get?room={room}"
 		return
 	}
 
@@ -384,7 +384,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/get?room=<ROOM_NAME>"
+		res.Data = "url: /control/get?room={room}"
 		return
 	}
 
@@ -396,7 +396,7 @@ func (s *Server) handleGet(w http.ResponseWriter, r *http.Request) {
 	res.Data = msg
 }
 
-//http://127.0.0.1:8090/control/delete?room=ROOM_NAME
+//http://127.0.0.1:8090/control/delete?room={room}
 func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 	res := &Response{
 		w:      w,
@@ -407,7 +407,7 @@ func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 
 	if err := r.ParseForm(); err != nil {
 		res.Status = 400
-		res.Data = "url: /control/delete?room=<ROOM_NAME>"
+		res.Data = "url: /control/delete?room={room}"
 		return
 	}
 
@@ -415,7 +415,7 @@ func (s *Server) handleDelete(w http.ResponseWriter, r *http.Request) {
 
 	if len(room) == 0 {
 		res.Status = 400
-		res.Data = "url: /control/delete?room=<ROOM_NAME>"
+		res.Data = "url: /control/delete?room={room}"
 		return
 	}
 
