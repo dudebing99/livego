@@ -380,7 +380,7 @@ func (s *Stream) CheckAlive() (n int) {
 		if v.w != nil {
 			//Alive from RWBaser, check last frame now - timestamp, if > timeout then Remove it
 			if !v.w.Alive() {
-				log.Infof("write timeout remove")
+				log.Debugf("write timeout remove, delete key: %v", key)
 				s.ws.Delete(key)
 				v.w.Close(fmt.Errorf("write timeout"))
 				return true

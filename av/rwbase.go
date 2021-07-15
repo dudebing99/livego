@@ -1,7 +1,7 @@
 package av
 
 import (
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"sync"
 	"time"
 )
@@ -40,7 +40,7 @@ func (rw *RWBaser) RecTimeStamp(timestamp, typeID uint32) {
 	} else if typeID == TagAudio {
 		rw.LastAudioTimestamp = timestamp
 	} else {
-		logrus.Warnf("unexpected type id: %d", typeID)
+		log.Warnf("unexpected type id: %d", typeID)
 	}
 }
 
@@ -55,6 +55,8 @@ func (rw *RWBaser) Alive() bool {
 	rw.lock.Lock()
 	defer rw.lock.Unlock()
 
-	b := !(time.Now().Sub(rw.PreTime) >= rw.timeout)
-	return b
+	alive := !(time.Now().Sub(rw.PreTime) >= rw.timeout)
+	log.Debugf("pre_time: %s, timeout: %.0f", rw.PreTime.String(), rw.timeout.Seconds())
+
+	return alive
 }

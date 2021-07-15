@@ -125,7 +125,7 @@ func (s *Server) handleConn(conn *core.Conn) error {
 		if configure.Config.GetBool("rtmp_noauth") {
 			key, err := configure.RoomKeys.GetKey(name)
 			if err != nil {
-				err := fmt.Errorf("Cannot create key err=%s", err.Error())
+				err := fmt.Errorf("Can not create key err=%s", err.Error())
 				conn.Close()
 				log.Error("GetKey err: ", err)
 				return err
